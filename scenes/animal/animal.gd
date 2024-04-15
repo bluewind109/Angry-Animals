@@ -1,6 +1,5 @@
-extends Area2D
+extends RigidBody2D
 
-@onready var splash = $Splash
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,7 +9,6 @@ func _ready():
 func _process(delta):
 	pass
 
-func _on_body_entered(body):
-	if (body.has_method("die") == true):
-		body.die()
-		splash.play()
+func die() -> void:
+	SignalManager.on_animal_died.emit() # signal sender
+	queue_free()

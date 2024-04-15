@@ -8,6 +8,7 @@
 size = Vector2(1200, 20)
 
 [node name="Water" type="Area2D"]
+collision_layer = 0
 script = ExtResource("1_qyu1d")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
