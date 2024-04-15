@@ -42,6 +42,7 @@ func set_release() -> void:
 	arrow.hide()
 	apply_central_impulse(get_impule())
 	launch_sound.play()
+	SignalManager.on_attempt_made.emit()
 	
 func set_drag() -> void:
 	_drag_start = get_global_mouse_position()
@@ -133,4 +134,7 @@ func _on_visible_on_screen_notifier_2d_screen_exited():
 
 func _on_sleeping_state_changed():
 	if (sleeping == true):
+		var cb = get_colliding_bodies()
+		if (cb.size() > 0):
+			cb[0].die()
 		call_deferred("die")
