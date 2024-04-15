@@ -20,10 +20,11 @@ shape = SubResource("CircleShape2D_ttrnw")
 
 [node name="Label" type="Label" parent="."]
 offset_left = -28.0
-offset_top = -43.0
+offset_top = -70.0
 offset_right = 27.0
-offset_bottom = -20.0
+offset_bottom = -21.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "DEBUG"
+text = "DEBUG
+0.0, 0.0"
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
