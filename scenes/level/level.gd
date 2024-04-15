@@ -17,5 +17,5 @@ func on_animal_died() -> void:
 
 func add_animal() -> void:
 	var instance = ANIMAL.instantiate()
-	add_child((instance))
-	instance.position = animal_start.position
+	call_deferred("add_child", instance)
+	instance.set_deferred("position", animal_start.position)
