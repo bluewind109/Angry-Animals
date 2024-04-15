@@ -4,6 +4,7 @@ extends RigidBody2D
 @onready var arrow = $Arrow
 @onready var stretch_sound = $StretchSound
 @onready var launch_sound = $LaunchSound
+@onready var kick_sound = $KickSound
 
 const DRAG_LIMIT_MAX: Vector2 = Vector2(0, 60)
 const DRAG_LIMIT_MIN: Vector2 = Vector2(-60, 0)
@@ -19,6 +20,7 @@ var _drag_start: Vector2 = Vector2.ZERO
 var _dragged_vector: Vector2 = Vector2.ZERO
 var _last_dragged_vector: Vector2 = Vector2.ZERO
 var _arrow_scale_x: float = 0.0
+var _last_collision_count: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -99,13 +101,23 @@ func update_drag() -> void:
 	play_stretch_sound()
 	drag_in_limits()
 	scale_arrow()
+	
+func play_collision_sound() -> void:
+	if (_last_collision_count == 0 and 
+		get_contact_count() > 0 and 
+		kick_sound.playing == false):
+		kick_sound.play()
+	_last_collision_count = get_contact_count()
+
+func update_flight() -> void:
+	play_collision_sound()
 
 func update(delta: float) -> void:
 	match _state:
 		ANIMAL_STATE.DRAG:
 			update_drag()
 		ANIMAL_STATE.RELEASE:
-			pass
+			update_flight()
 
 func die() -> void:
 	SignalManager.on_animal_died.emit() # signal sender
@@ -118,3 +130,7 @@ func _on_input_event(_viewport, event, _shape_idx):
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	SignalManager.on_animal_died.emit() # signal sender
 	queue_free()
+
+func _on_sleeping_state_changed():
+	if (sleeping == true):
+		call_deferred("die")
