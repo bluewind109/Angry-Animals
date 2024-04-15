@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://dn0xrjws2t24c"]
+
+[ext_resource type="Texture2D" uid="uid://d0nwkr7lamjmh" path="res://assets/env/MainBG.png" id="1_6sg2c"]
+[ext_resource type="PackedScene" uid="uid://yphm276hghui" path="res://scenes/level_button/level_button.tscn" id="2_wh67r"]
+[ext_resource type="LabelSettings" uid="uid://kj7qglgv16je" path="res://lg_blue_72.tres" id="3_62ekj"]
+[ext_resource type="AudioStream" uid="uid://bdnkqh4n0djre" path="res://assets/audio/birdsong.wav" id="4_i8yem"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_6sg2c")
+
+[node name="HB" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+
+[node name="LevelButton" parent="HB" instance=ExtResource("2_wh67r")]
+layout_mode = 2
+
+[node name="LevelButton2" parent="HB" instance=ExtResource("2_wh67r")]
+layout_mode = 2
+
+[node name="LevelButton3" parent="HB" instance=ExtResource("2_wh67r")]
+layout_mode = 2
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -265.0
+offset_right = 265.0
+offset_bottom = 97.0
+grow_horizontal = 2
+rotation = 0.0523599
+theme_override_constants/margin_top = 24
+
+[node name="Title" type="Label" parent="MC"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "ANGRY ANIMALS"
+label_settings = ExtResource("3_62ekj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_i8yem")
+autoplay = true
