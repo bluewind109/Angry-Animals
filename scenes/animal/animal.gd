@@ -3,9 +3,12 @@ extends RigidBody2D
 @onready var label = $Label
 @onready var arrow = $Arrow
 @onready var stretch_sound = $StretchSound
+@onready var launch_sound = $LaunchSound
 
 const DRAG_LIMIT_MAX: Vector2 = Vector2(0, 60)
 const DRAG_LIMIT_MIN: Vector2 = Vector2(-60, 0)
+const IMPULSE_MULTIPLIER: float = 20.0
+const IMPULSE_MAX: float = 1200.0
 
 enum ANIMAL_STATE { READY, DRAG, RELEASE }
 
@@ -15,9 +18,11 @@ var _start: Vector2 = Vector2.ZERO
 var _drag_start: Vector2 = Vector2.ZERO
 var _dragged_vector: Vector2 = Vector2.ZERO
 var _last_dragged_vector: Vector2 = Vector2.ZERO
+var _arrow_scale_x: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_arrow_scale_x = arrow.scale.x
 	arrow.hide()
 	_start = position
 
@@ -25,16 +30,27 @@ func _ready():
 func _physics_process(delta):
 	update(delta)
 	label.text = "%s\n" % ANIMAL_STATE.keys()[_state]
-	label.text += "%.1f,%.1f" % [_dragged_vector.x, _dragged_vector.y] 
+	label.text += "%.1f,%.1f" % [_dragged_vector.x, _dragged_vector.y]
+
+func get_impule() -> Vector2:
+	return _dragged_vector * -1 * IMPULSE_MULTIPLIER
+
+func set_release() -> void:
+	freeze = false
+	arrow.hide()
+	apply_central_impulse(get_impule())
+	launch_sound.play()
+	
+func set_drag() -> void:
+	_drag_start = get_global_mouse_position()
+	arrow.show()
 
 func set_state(new_state: ANIMAL_STATE) -> void:
 	_state = new_state
 	if (_state == ANIMAL_STATE.RELEASE):
-		freeze = false
-		arrow.hide()
+		set_release()
 	elif (_state == ANIMAL_STATE.DRAG):
-		_drag_start = get_global_mouse_position()
-		arrow.show()
+		set_drag()
 
 func detect_release() -> bool:
 	if (_state == ANIMAL_STATE.DRAG):
@@ -44,6 +60,9 @@ func detect_release() -> bool:
 	return false
 
 func scale_arrow() -> void:
+	var imp_length = get_impule().length()
+	var perc = imp_length / IMPULSE_MAX
+	arrow.scale.x = (_arrow_scale_x * perc) + _arrow_scale_x
 	arrow.rotation = (_start - position).angle()
 
 func play_stretch_sound() -> void:
@@ -95,3 +114,7 @@ func die() -> void:
 func _on_input_event(_viewport, event, _shape_idx):
 	if (_state == ANIMAL_STATE.READY and event.is_action_pressed("drag")):
 		set_state(ANIMAL_STATE.DRAG)
+
+func _on_visible_on_screen_notifier_2d_screen_exited():
+	SignalManager.on_animal_died.emit() # signal sender
+	queue_free()
