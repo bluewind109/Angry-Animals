@@ -113,7 +113,7 @@ func play_collision_sound() -> void:
 func update_flight() -> void:
 	play_collision_sound()
 
-func update(delta: float) -> void:
+func update(_delta: float) -> void:
 	match _state:
 		ANIMAL_STATE.DRAG:
 			update_drag()

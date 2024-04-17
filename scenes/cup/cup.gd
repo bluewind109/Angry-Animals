@@ -5,6 +5,6 @@ extends StaticBody2D
 func die() -> void:
 	animation_player.play("vanish")
 
-func _on_animation_finished(anim_name):
+func _on_animation_finished(_anim_name):
 	SignalManager.on_cup_destroyed.emit()
 	queue_free()

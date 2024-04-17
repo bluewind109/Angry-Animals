@@ -11,7 +11,7 @@ func _ready():
 	add_animal()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if (Input.is_key_pressed(KEY_ESCAPE)):
 		get_tree().change_scene_to_packed(MAIN)
 	
