@@ -14,6 +14,8 @@ var _level_scene: PackedScene
 func _ready():
 	scale = DEFAULT_SCALE
 	level_label.text = str(level_number)
+	var best_score = ScoreManager.get_best_level_score(str(level_number))
+	score_label.text = str(best_score)
 	_level_scene = load("res://scenes/level/level%s.tscn" % level_number)
 
 func _on_pressed():
